@@ -9,7 +9,7 @@ self.addEventListener('install', function (event) {
     caches.open(CACHE_NAME).then(function (cache) {
       // B6. TODO - Add all of the URLs from RECIPE_URLs here so that they are
       //            added to the cache when the ServiceWorker is installed
-      const RECIPE_URLs = [
+      const RECIPE_URLS = [
         'https://adarsh249.github.io/Lab8-Starter/recipes/1_50-thanksgiving-side-dishes.json',
         'https://adarsh249.github.io/Lab8-Starter/recipes/2_roasting-turkey-breast-with-stuffing.json',
         'https://adarsh249.github.io/Lab8-Starter/recipes/3_moms-cornbread-stuffing.json',
