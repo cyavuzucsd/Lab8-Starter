@@ -9,7 +9,7 @@ self.addEventListener('install', function (event) {
     caches.open(CACHE_NAME).then(function (cache) {
       // B6. TODO - Add all of the URLs from RECIPE_URLs here so that they are
       //            added to the cache when the ServiceWorker is installed
-      const recipeURLS = [
+      const RECIPE_URLs = [
         'https://adarsh249.github.io/Lab8-Starter/recipes/1_50-thanksgiving-side-dishes.json',
         'https://adarsh249.github.io/Lab8-Starter/recipes/2_roasting-turkey-breast-with-stuffing.json',
         'https://adarsh249.github.io/Lab8-Starter/recipes/3_moms-cornbread-stuffing.json',
@@ -31,7 +31,7 @@ self.addEventListener('activate', function (event) {
 self.addEventListener('fetch', function (event) {
   // We added some known URLs to the cache above, but tracking down every
   // subsequent network request URL and adding it manually would be very taxing.
-  // We will be adding all of the resources not specified in the intiial cache
+  // We will be adding all of the resources not specified in the initial cache
   // list to the cache as they come in.
   /*******************************/
   // This article from Google will help with this portion. Before asking ANY
@@ -45,16 +45,15 @@ self.addEventListener('fetch', function (event) {
   // B8. TODO - If the request is in the cache, return with the cached version.
   //            Otherwise fetch the resource, add it to the cache, and return
   //            network response.
+
   event.respondWith(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      const cachedResponse = await cache.match(event.request);
-      if (cachedResponse) {
-        return cachedResponse;
-      } else {
-        const fetchedResponse = await fetch(event.request);
-        cache.put(event.request, fetchedResponse.clone());
-        return fetchedResponse;
-      }
+    caches.open(CACHE_NAME).then(function (cache) {
+      return cache.match(event.request).then(function (response) {
+        return response || fetch(event.request).then(function (networkResponse) {
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        });
+      });
     })
   );
 });
